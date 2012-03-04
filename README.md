@@ -60,13 +60,27 @@ Use Cases
 ---------
 
 The first two use cases we want to cover is a _Dashboard_ and a
-_MBean Browser_
+_MBean Browser_.
 
 # Dashboard
 
+The _Dashboard_ provides timeseries chart and other widget which can
+be grouped in various sections. There are widget that came out of the
+box (Memory usage, thread count), others can be defined by the
+user. The user can arrange the widgets freely on the dashboard and the
+configuration is saved locally on the browser
+
+![Ají Dashboard](http://labs.consol.de/wp-content/uploads/2012/03/dashboard1.png)
+
+See [AJI-3](https://jolokia.jira.com/browse/AJI-3) for details. 
 
 # MBean Browser
 
+The _MBean Browser_ allows for easy navigation to an MBean and
+applying certain actions like reading/writing of attributes or
+execution of operations. Keyboard navigation is easily possible. 
+
+See [AJI-1](https://jolokia.jira.com/browse/AJI-1) for details.
 
 # Additional Ideas
 
