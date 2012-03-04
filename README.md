@@ -12,8 +12,7 @@ find a description of the planned tech stack, description of the use
 cases to be implemented, a rough roadmap and some ideas for future
 versions. And how you can participate:
 
-Join Us!
---------
+## Join Us!
 
 This project is open. Since there is not much yet here, so it is a
 good chance to dig into. The only requirement is a decent knowledge of
@@ -35,8 +34,7 @@ Development is coordinated over two channels:
 * Use IRC channel `#jolokia` for live discussions on
   [Freenode](http://freenode.net/)
 
-High Level Design Goals
------------------------
+## High Level Design Goals
 
 This list of a high level goals serve as guideline for the overall
 development. These are not connected to a particular use case, but
@@ -56,13 +54,12 @@ always part of the acceptance criteria of each user story
    efforts into the choice of things like fonts, spacing, UI element
    arrangements, fluid behaviour.
 
-Use Cases
----------
+## Use Cases
 
 The first two use cases we want to cover is a _Dashboard_ and a
 _MBean Browser_.
 
-# Dashboard
+### Dashboard
 
 The _Dashboard_ provides timeseries chart and other widget which can
 be grouped in various sections. There are widget that came out of the
@@ -74,7 +71,7 @@ configuration is saved locally on the browser
 
 See [AJI-3](https://jolokia.jira.com/browse/AJI-3) for details. 
 
-# MBean Browser
+### MBean Browser
 
 The _MBean Browser_ allows for easy navigation to an MBean and
 applying certain actions like reading/writing of attributes or
@@ -82,7 +79,7 @@ execution of operations. Keyboard navigation is easily possible.
 
 See [AJI-1](https://jolokia.jira.com/browse/AJI-1) for details.
 
-# Additional Ideas
+### Additional Ideas
 
 * Plugin architecture
 * Development Tools 
@@ -90,8 +87,7 @@ See [AJI-1](https://jolokia.jira.com/browse/AJI-1) for details.
   - Memory Analysis
 * App-Server specific views
 
-Tech Stack
-----------
+## Tech Stack
 
 Ají is also a playground project for having fun with the latest stuff,
 even when it is not matured. That's our fun part ;-). Also, browser
@@ -111,7 +107,7 @@ Here now the proposed stack. It is not really settled down, maybe you
 have some strong opinions here ? Let us know at
 `aji-dev@googlegroups.com`.
 
-# Coffeescript
+### Coffeescript
 
 I tried it and I like it. My only concerns where about an extended
 round-trip due to the extra compilation step and debugging hurdles for
@@ -120,7 +116,7 @@ proper build process and workflow (see below), the later is
 (currently) a non-issue since it is really straightforward from the
 generated JS code to the original CS code. 
 
-# Build system
+### Build system
 
 A build system has to be *really* important to carefully be chosen
 since it completely dominates the development workflow and overall
@@ -154,7 +150,7 @@ The main ingredients are a Maven [Jetty Plugin](http://docs.codehaus.org/display
 Cofeescript source. The later includes also a watch mode for
 periodically checking the CoffeeScript source. 
 
-# MVC Platform
+### MVC Platform
 
 Several JS MVC platform has been checked briefly (see this
 [overview](http://codebrief.com/2012/01/the-top-10-javascript-mvc-frameworks-reviewed/)
@@ -175,7 +171,7 @@ yet been evaluated:
 [Chaplin](https://github.com/moviepilot/chaplin). On a first view,
 Chaplin seems to be quite charming.
 
-# Module Management
+### Module Management
 
 Something really missing out of the box for (the current) Javascript
 is a module system like for other languages. This lack really made me
@@ -189,7 +185,7 @@ smaller, it is supossed to be faster and has a very nice
 API. Although, there is some ecosystem around it (_cujo_) which could
 be helpful as well.
 
-# Layout and UI
+### Layout and UI
 
 Everybody uses [Bootstrap](http://twitter.github.com/bootstrap/) these
 days, there even already quite some
@@ -200,7 +196,7 @@ adoption (there must be a chili somewhere ;-). This implies that we
 will use [Less](http://lesscss.org/) as well, which a good thing on
 its own. 
 
-# Charting
+### Charting
 
 There are tons of charting libraries out there. However, most of them
 have memory issues if the charts are updated periodically (which is
@@ -220,7 +216,7 @@ In order to let the door open for various graphing library some sort
 of abstraction bei an plugin API would be nice as described
 [here](http://bost.ocks.org/mike/chart/) 
 
-# Local storage / IndexedDB
+### Local storage / IndexedDB
 
 Since server side persistence is not yet in focus, for persistence
 needs like the dashboard configuration HTML-5 client side storage
