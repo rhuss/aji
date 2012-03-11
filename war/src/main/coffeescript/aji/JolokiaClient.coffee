@@ -29,7 +29,7 @@ define(["jolokia-simple","underscore"], (Jolokia,_) ->
   class JolokiaClient
 
     # Naming cache
-    nameCache: null
+    mbeanCache: null
 
     # Collections of MBean Meta information
     mbeansMeta: {}
@@ -108,11 +108,20 @@ define(["jolokia-simple","underscore"], (Jolokia,_) ->
 
     running: -> @state is "running"
 
-    # Get names. force == true -> refresh cache
+    mBeans: (force) ->
+      @mbeanCache = @j4p.list(null, {maxDepth : 2}) if !@mbeanCache or force
+      @mbeanCache
+
+    mBeanNames: (force) ->
+      names = []
+      for domain, value of @mBeans(force)
+        for props of value
+          names.push(domain + ":" + props)
+      names.sort()
+
     filterNames: (term, force) ->
-      checkCache(this, force)
       regexp = new RegExp(term, "i")
-      _.filter(@nameCache, (elem) -> regexp.test(elem))
+      _.filter(@mBeanNames(force), (elem) -> regexp.test(elem))
 
     # Get the MBeanInfo for an MBean with the given name
     getMBeanInfo : (name, force) ->
@@ -125,22 +134,7 @@ define(["jolokia-simple","underscore"], (Jolokia,_) ->
   # =============================================================================
   # Private functions:
 
-  # load all MBean names from the target and return it sorted
-  loadNames = (j4p) ->
-    tree = j4p.list(null, 2)
-    names = [];
-    for domain, value of tree
-      for props of value
-        names.push(domain + ":" + props)
-    names.sort()
-
-  # Check local that local cache name exists and
-  # load all MBean names from the server if not
-  # (or if 'force' is set)
-  checkCache = (store, force) ->
-    store.nameCache = loadNames(store.j4p) if !store.nameCache or force
-
-      # Load MBean meta data from the server
+  # Load MBean meta data from the server
   loadMeta = (j4p, name) ->
     # Simplistic approach for converting a MBean name to a path. Should
     # take escaping into account

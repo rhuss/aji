@@ -63,9 +63,10 @@ _MBean Browser_.
 
 The _Dashboard_ provides timeseries chart and other widget which can
 be grouped in various sections. There are widget that came out of the
-box (Memory usage, thread count), others can be defined by the
-user. The user can arrange the widgets freely on the dashboard and the
-configuration is saved locally on the browser
+box (Memory usage, thread count), application server specific widgets
+and others can be defined by the user. The user can arrange the
+widgets freely on the dashboard and the configuration is saved locally
+in the browser
 
 ![Ají Dashboard](http://labs.consol.de/wp-content/uploads/2012/03/dashboard1.png)
 

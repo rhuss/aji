@@ -156,6 +156,11 @@
               <resourceBase>${project.build.directory}/aji</resourceBase>
               <handler implementation="org.mortbay.jetty.handler.ResourceHandler"/>
             </contextHandler>
+            <contextHandler implementation="org.mortbay.jetty.handler.ContextHandler">
+              <contextPath>/aji/app/tmpl</contextPath>
+              <resourceBase>src/main/webapp/tmpl</resourceBase>
+              <handler implementation="org.mortbay.jetty.handler.ResourceHandler"/>
+            </contextHandler>
           </contextHandlers>
         </configuration>
       </plugin>

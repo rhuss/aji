@@ -12,8 +12,8 @@ curl({
      "jolokia": "jolokia/jolokia",
      "jolokia-simple": "jolokia/jolokia-simple"
  }},
- ["aji/JolokiaClient","aji/mbean/MBeanSpecModelFactory","aji/mbean/MBeanSidebarView","domReady!"],
- function(client,MBeanSpecModelFactory,view) {
+ ["aji/JolokiaClient","aji/mbean/MBeanSpecModelFactory","aji/mbean/MBeanNavigator","domReady!"],
+ function(client,MBeanSpecModelFactory,MBeanNavigator) {
      console.log(client.getMBeanInfo("java.lang:type=Memory"));
      console.log(client.filterNames(".*"));
      var attr = MBeanSpecModelFactory.newAttributeRequest({
@@ -22,4 +22,5 @@ curl({
                  path: "used"
              });
      console.log(attr.toJolokiaRequest());
+     new MBeanNavigator(".sidebar")
  });

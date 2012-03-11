@@ -35,7 +35,7 @@ define(["jquery","jolokia/jolokia-simple"], function ($,Jolokia) {
             this.j4p = new Jolokia(url);
 
             // Naming cache
-            this.nameCache = null;
+            this.mbeanCache = null;
 
             // Collections of MBean Meta information
             this.mbeansMeta = new Object();
@@ -143,7 +143,7 @@ define(["jquery","jolokia/jolokia-simple"], function ($,Jolokia) {
             this.filterNames = function (term, force) {
                 checkCache(this, force);
                 var regexp = new RegExp(term, "i");
-                return _.select(this.nameCache, function (elem) {
+                return _.select(this.mbeanCache, function (elem) {
                     return regexp.test(elem);
                 })
             };
@@ -180,8 +180,8 @@ define(["jquery","jolokia/jolokia-simple"], function ($,Jolokia) {
         // load all MBean names from the server if not
         // (or if 'force' is set)
         function checkCache(store, force) {
-            if (!store.nameCache || force) {
-                store.nameCache = loadNames(store.j4p);
+            if (!store.mbeanCache || force) {
+                store.mbeanCache = loadNames(store.j4p);
             }
         }
 
