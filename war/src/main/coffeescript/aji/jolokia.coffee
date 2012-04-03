@@ -50,6 +50,7 @@ define(["jolokia-simple","underscore"], (Jolokia,_) ->
     # client.
     constructor: (url) -> @j4p = new Jolokia(url)
 
+    # Register a request which gets polled periodically
     registerRequest : (callback, request...) ->
       throw  "At a least one request must be provided" if arguments.length < 2
       if (typeof callback is 'object')
@@ -69,8 +70,10 @@ define(["jolokia-simple","underscore"], (Jolokia,_) ->
         requests : arguments[1..]
       handle
 
+    # Unregister a request
     unregisterRequest: (handle) -> @requests[handle] = null
 
+    # Nuke all empty requests
     compressRequests: -> @requests = _.filter(@requests, (req) -> req != null)
 
     callJolokia: ->
