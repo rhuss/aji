@@ -17,11 +17,8 @@
 define(["backbone","aji/TemplateManager"],(Backbone,TemplateManager) ->
   HeaderView = Backbone.View.extend(
 
-      initialize: () ->
-        @template = TemplateManager.get('header')
-
       render: (eventName) ->
-        $(@el).html(@template())
+        $(@el).html(TemplateManager.template('header',{}))
         @
     )
   HeaderView

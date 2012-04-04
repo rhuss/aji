@@ -26,11 +26,12 @@ curl({
      "underscore": "support/underscore",
      "backbone": "support/backbone",
      "jolokia": "jolokia/jolokia",
-     "jolokia-simple": "jolokia/jolokia-simple"
+     "jolokia-simple": "jolokia/jolokia-simple",
+     "handlebars" : "support/handlebars"
  }},
  ["backbone","aji/TemplateManager","aji/AppRouter","domReady!"],
  function(Backbone,TemplateManager,AppRouter) {
-     TemplateManager.loadTemplates(['header','navigator'],
+     TemplateManager.loadTemplates(['header','mbean'],
              function () {
                  app = new AppRouter();
                  Backbone.history.start();

@@ -14,7 +14,7 @@
  limitations under the License.
 ###
 
-define(["backbone","aji/HeaderView","aji/mbean/NavigatorView"],(Backbone,HeaderView,NavigatorView) ->
+define(["backbone","aji/HeaderView","aji/mbean/MBeanBrowserView"],(Backbone,HeaderView,MBeanBrowserView) ->
   AppRouter = Backbone.Router.extend(
       routes:
         "":"navigator"
@@ -25,9 +25,9 @@ define(["backbone","aji/HeaderView","aji/mbean/NavigatorView"],(Backbone,HeaderV
         $('.header').html(this.headerView.render().el);
 
       navigator: () ->
-        if (!@navigatorView)
-          @navigatorView = new NavigatorView()
-        $('#content').html(@navigatorView.render({hide: true}).el)
+        if (!@mbeanBrowserView)
+          @mbeanBrowserView = new MBeanBrowserView()
+        $('#content').html(@mbeanBrowserView.render().el)
   )
 
   AppRouter

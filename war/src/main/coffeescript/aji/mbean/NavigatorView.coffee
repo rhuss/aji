@@ -1,53 +1,16 @@
-define(["backbone","underscore","jquery","aji/mediator","aji/mbean/NavigatorModel","aji/TemplateManager"],(Backbone,_,$,mediator,NavigatorModel,TemplateManager) ->
+define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/TemplateManager"],(Backbone,_,$,mediator,jolokia,TemplateManager) ->
 
-  DomainView = Backbone.View.extend(
-    tagName: "li"
-    className: "navigator-domain"
-
-    events:
-      "click .navigator-domain-toggle": "toggleDomain"
-
-    toggleDomain: (ev) ->
-      @toggleMBeans(ev)
-      ev.stopPropagation()
-      ev.preventDefault()
-
-    render: (opts) ->
-      @$el.empty()
-      @$el.append(makeLink('navigator-domain-toggle',@model.get("name")))
-      @$ul = $(@make("ul")).appendTo(@$el)
-      @$ul.append(new MBeanView(
-        model: model
-      ).render().el) for model in @model.get("mbeans") when model.get("visible")
-      @$ul.hide() if opts?.hide
-      @
-
-    toggleMBeans: (ev) ->
-      @collapsed = !@collapsed
-      @$ul.toggle('fast')
-
-  )
-
-  MBeanView = Backbone.View.extend(
-    tagName: "li"
-    className: "navigator-mbean"
-
-    events:
-      "click .navigator-mbean-select": "mbeanSelected"
-
-    render: () ->
-      @$el.append(makeLink("navigator-mbean-select",@model.get("name")))
-      @$el.data("mbean",@model.get("mbean"))
-      @
-
-    mbeanSelected: () ->
-      mediator.publish("navigator-mbean-select",@model)
-      console.log("MBean: " + @model.get("objectName"));
-  )
+  ###
+   The Navigator view used for handling the MBean navigator for looking up MBeans.
+   It publishes the global 'navigator-mbean-select' event when an mbean is seleted.
+  ###
 
   NavigatorView = Backbone.View.extend(
 
-    tagName: "ul"
+    tagName: "div"
+
+    attributes:
+      class: "span3"
 
     events:
       "keypress": "keyPress"
@@ -56,65 +19,93 @@ define(["backbone","underscore","jquery","aji/mediator","aji/mbean/NavigatorMode
     # Textfield used for filter
     $filter: null
 
+    # Outer list
+    $ul: null
+
     initialize: () ->
       # Create the filter box
       @$filterEl = $(@make("input",
         type: "text"
         class: "filter"
       )).appendTo(@$el)
-      @model = new NavigatorModel();
-      mediator.subscribe("navigator-mbean-select",(model) ->
-        console.log("Model: " + model.get("objectName"))
-      )
+      @$ul = $("<ul class='navigator domain-list'></ul>").appendTo(@$el)
+      @$ul.delegate("li.navigator","click",@clickHandler)
 
     render: (opts) ->
-      domains = @model.get("domains")
-      @$el.empty();
-      @$el.append(@$filterEl)
-      @domainViews = []
-      for domain in domains when domain.get("visible")
-        domainView = new DomainView(
-            model: domain
+      mBeanMap = jolokia.mBeans()
+      @domain2ElementMap = {}
+      @mbean2ElementMap = {}
+      @$ul.empty()
+      for domain,mbeans of mBeanMap
+        $domain = $("<li class='navigator domain'></li>").appendTo(@$ul)
+        $domain.data(
+          domain: domain
         )
-        @domainViews.push(domainView)
-        @$el.append(domainView.render(opts).el)
+        @domain2ElementMap[domain] = $domain
+        $domain.append($("<a href='#' class='navigator domain-name'></a>").text(domain))
+        $mbeans = $("<ul class='navigator mbean-list'></ul>").appendTo($domain)
+        for mbean in _.keys(mbeans).sort()
+          $mbean = $("<li class='navigator mbean'></li>").append($("<a href='#'></a>").text(mbean)).appendTo($mbeans)
+          objectname = domain + ":" + mbean
+          $mbean.data(
+            domain: domain
+            mbean: objectname
+          )
+          @mbean2ElementMap[objectname] = $mbean
+        $mbeans.hide() if opts?.hide
       @
 
     # =====================================================================
     # Keyhandler
 
+    clickHandler: (ev) ->
+      selectMBeanOrDomain($(ev.currentTarget))
+      ev.stopPropagation()
+
     keyPress: (ev) ->
       ev.stopPropagation()
+      console.log("KC: " + ev.keyCode)
       switch ev.keyCode
         when 38 then @upInList()
         when 40 then @downInList()
+        when 13 then @selectInList(ev)
+        else (ev) => @filterInput(ev)
 
     keyDown: (ev) ->
-      if ($.browser.webkit || $.browser.msie)
-          @keyPress(ev)
+      if ( ($.browser.webkit || $.browser.msie) && ev.keyCode != 13)
+        @keyPress(ev)
 
     downInList: () ->
-      # Get active element
-      handled = false;
-      if (activeDomainView)
-        handled = activeDomainView.activeNext()
-      active = @$list.find('.active').removeClass('active')
-      next = active.next()
-      if (!next.length)
-        next = $(@$list.find('li:visible')[0])
-      next.addClass("active")
+      $active = @$ul.find('.active').removeClass('active')
+      $next = $active.find('li:visible').first()
+      if (!$next.length)
+        $next = $active.next()
+        if (!$next.length)
+          $next = $active.parents('li:visible').first()
+          if ($next.length)
+            $next = $next.next()
+          if (!$next.length)
+            $next = $(@$ul.find('li:visible')[0])
+      $next.addClass("active")
 
     # If none -> first domain is active
     # Dive into visible domains
     upInList: () ->
-      active = @$list.find('.active').removeClass('active')
-      prev = active.prev()
+      $active = @$ul.find('.active').removeClass('active')
+      $prev = $active.prev().find('li:visible').last()
+      if (!$prev.length)
+        $prev = $active.prev()
+        if (!$prev.length)
+          $prev = $active.parents('li:visible').first()
+          if (!$prev.length)
+            $prev = @$ul.find('li:visible').last()
+      $prev.addClass('active')
 
-      if (!prev.length)
-        prev = @$list.find('li:visible').last()
-
-      prev.addClass('active')
+    selectInList: (ev) ->
+      $active = @$ul.find('.active')
+      selectMBeanOrDomain($active)
   )
+
 
   # ===========================================================================
   # private methods
@@ -129,15 +120,12 @@ define(["backbone","underscore","jquery","aji/mediator","aji/mbean/NavigatorMode
         href: "#"
     ).html(value)
 
+  selectMBeanOrDomain = ($el) ->
+    if ($el.data("mbean"))
+      console.log("MBean: " + $el.data("mbean"))
+      mediator.publish("navigator-mbean-select",$el.data("mbean"))
+    else if ($el.data("domain"))
+      $el.find("ul").toggle('fast')
+
   NavigatorView
-
-
-
-#      templ = _.template(text)
-#      console.log(templ)
-#      mbeans = jolokia.mBeans()
-#      console.log(mbeans)
-#      $(".sidebar").append($(templ(
-#          mbeans: mbeans
-#      )))
 )
