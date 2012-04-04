@@ -1,7 +1,7 @@
-Aj�
+Ají
 ===
 
-> Aj� is [Jolokia][1] UI which contains a Dashboard with various textual
+> Ají is [Jolokia][1] UI which contains a Dashboard with various textual
 > and graphical widgets and an MBean Browser for an easy exploration of
 > the JMX space. It is an add-on to the normal Jolokia agents and gets
 > deployed along with it.
@@ -28,7 +28,7 @@ Development is coordinated over two channels:
   use [Google Groups](https://groups.google.com/forum/#!forum/aji-dev)
   for subscribing. 
 * A scrum based task distribution with help of
-  [Aj�'s JIRA](https://jolokia.jira.com/browse/AJI). The 
+  [Ají's JIRA](https://jolokia.jira.com/browse/AJI). The
   current planned stories and task can be found in the
   planning board.
 * Use IRC channel `#jolokia` for live discussions on
@@ -40,11 +40,11 @@ This list of a high level goals serve as guideline for the overall
 development. These are not connected to a particular use case, but
 always part of the acceptance criteria of each user story
 
-* *Self contained* - it is essential, that Aj� gets deployed along
+* *Self contained* - it is essential, that Ají gets deployed along
    with the Jolokia agent it uses as backend. This implies that there
    will be 4 variants, each for each Jolokia agent variant. 
-* *Small* - Aj� + Jolokia <= 350k.
-* *Fast* - The performance of Aj� depends on various factors like the
+* *Small* - Ají + Jolokia <= 350k.
+* *Fast* - The performance of Ají depends on various factors like the
    client side javascript execution or the number of server side
    interaction. Performance tests should backup performance thresholds.
 * *Good UX* - A focus should be on keyboard navigation, appropriate
@@ -68,7 +68,7 @@ and others can be defined by the user. The user can arrange the
 widgets freely on the dashboard and the configuration is saved locally
 in the browser
 
-![Aj� Dashboard](http://labs.consol.de/wp-content/uploads/2012/03/dashboard1.png)
+![Ají Dashboard](http://labs.consol.de/wp-content/uploads/2012/03/dashboard1.png)
 
 See [AJI-3](https://jolokia.jira.com/browse/AJI-3) for details. 
 
@@ -90,16 +90,16 @@ See [AJI-1](https://jolokia.jira.com/browse/AJI-1) for details.
 
 ## Tech Stack
 
-Aj� is also a playground project for having fun with the latest stuff,
+Ají is also a playground project for having fun with the latest stuff,
 even when it is not matured. That's our fun part ;-). Also, browser
-compatibility is not a main goal and Aj� will require decent HTML-5
+compatibility is not a main goal and Ají will require decent HTML-5
 capabilities.
 
 Armed with this freedom, and after quite some time of research and
 evaluation the following tech stack settled won, although nothing is
 really fixed while we are going.
 
-As already said, Aj� will be a SPA (_single page application_) with
+As already said, Ají will be a SPA (_single page application_) with
 no logic on the server side and everything running on the client. The
 Jolikia agent is the server part (with maybe some slight addition for
 supporting some use cases). 
@@ -165,7 +165,7 @@ following reasons:
 
 An alternative would be [spine.js](http://spinejs.com/).
 
-Whether Aj� requires an additional layer as application framework on top of backbone.js has not
+Whether Ají requires an additional layer as application framework on top of backbone.js has not
 yet been evaluated:
 [Thorax](http://functionsource.com/post/lumbar-support-for-your-thorax-introducing-an-opinionated-backbone-application-framework),
 [Marionette](http://derickbailey.github.com/backbone.marionette) and
