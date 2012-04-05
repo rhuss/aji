@@ -28,7 +28,7 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
         type: "text"
         class: "filter"
       )).appendTo(@$el)
-      @$ul = $("<ul class='navigator domain-list'></ul>").appendTo(@$el)
+      @$ul = $("<ul class='nav nav-pills nav-stacked navigator domain-list'></ul>").appendTo(@$el)
       @$ul.delegate("li.navigator","click",@clickHandler)
 
     render: (opts) ->
@@ -52,7 +52,7 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
             mbean: objectname
           )
           @mbean2ElementMap[objectname] = $mbean
-        $mbeans.hide() if opts?.hide
+        $mbeans.hide() if opts?.collapse
       @
 
     # =====================================================================

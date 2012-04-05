@@ -8,7 +8,7 @@ define(["backbone","aji/mbean/NavigatorView","aji/mbean/MBeanView"],(Backbone,Na
       "class": "row-fluid"
 
     initialize: () ->
-        @$el.append(new NavigatorView().render({hide: true}).el)
+        @$el.append(new NavigatorView().render({collapse: true}).el)
         @$el.append(new MBeanView().el)
   )
 

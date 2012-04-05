@@ -158,7 +158,7 @@
             </contextHandler>
             <contextHandler implementation="org.mortbay.jetty.handler.ContextHandler">
               <contextPath>/aji/app/tmpl</contextPath>
-              <resourceBase>src/main/webapp/tmpl</resourceBase>
+              <resourceBase>src/main/webapp/app/tmpl</resourceBase>
               <handler implementation="org.mortbay.jetty.handler.ResourceHandler"/>
             </contextHandler>
           </contextHandlers>

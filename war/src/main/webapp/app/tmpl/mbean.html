@@ -13,9 +13,32 @@
   ~  See the License for the specific language governing permissions and
   ~  limitations under the License.
   -->
-<ul>
-  {{#eachProp info}}
-  <li>{{prop}} -- {{value}} {{#jsonify value}}{{/jsonify}}</li>
-  {{/eachProp}}
-</ul>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Value</th>
+      <th>Description</th>
+      <th>R/W</th>
+    </tr>
+  </thead>
+  <tbody>
+  {{#each data}}
+  <tr>
+    <td>
+      {{this.name}}
+    </td>
+    <td>
+      {{this.type}}
+    </td>
+    <td>
+      <strong>{{this.value}}</strong>
+    </td>
+    <td>{{this.desc}}</td>
+    <td>{{this.rw}}</td>
+  </tr>
+  {{/each}}
+  </tbody>
+</table>
 
