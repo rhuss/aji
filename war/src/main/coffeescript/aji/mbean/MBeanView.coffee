@@ -1,4 +1,20 @@
 define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/TemplateManager"],(Backbone,_,$,mediator,jolokia,TemplateManager) ->
+
+  compositeDataHandler = (attr,value,meta) ->
+    TemplateManager.template("compositeData",
+        data: for key,val of value
+           {
+              key: key
+              value: val
+           }
+    )
+
+  tabularDataHandler = (attr,value,meta) ->
+    console.dir(value)
+    value
+
+  # ========================================= View definition
+
   MBeanView = Backbone.View.extend(
 
     attributes:
@@ -7,9 +23,15 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
     initialize: ->
       mediator.subscribe("navigator-mbean-select",(mbean) => @render(mbean))
 
-    typeShortenMap:
-      'java.lang.String': 'String'
-      'javax.management.openmbean.CompositeData': 'CompositeData'
+    typeHandler:
+      'java.lang.String':
+         name: 'String'
+      'javax.management.openmbean.CompositeData':
+         name: 'CompositeData'
+         handler: compositeDataHandler
+      'javax.management.openmbean.TabularData':
+         name: 'TabularData' 
+         handler: compositeDataHandler
 
     arrayRegexp: /^\s*\[L(.*);\s*$/
 
@@ -22,7 +44,7 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
       data = for attr,meta of attributes
         { name: attr
         desc: @cleanupDescription(attr,meta)
-        value:@prepareValue(attributeValues[attr],meta)
+        value:@prepareValue(attr,attributeValues[attr],meta)
         type: @shortenType(meta.type)
         rw: meta.rw }
 
@@ -40,24 +62,20 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
       if (arrayMatch)
         type = arrayMatch[1]
         isArray = true
-      type = @typeShortenMap[type] if @typeShortenMap[type]
+      type = @typeHandler[type]?.name || type
       type += "[]" if isArray
       type
 
     cleanupDescription: (name,meta) ->
       return if meta.desc == name then "" else meta.desc
 
-    prepareValue: (value,meta) ->
-      if (meta.type == 'javax.management.openmbean.CompositeData')
-         TemplateManager.template("compositeData",
-            data:  for key,val of value
-              {
-                key: key
-                value: val
-              }
-         )
+    prepareValue: (attr,value,meta) ->
+      handler = @typeHandler[meta.type]?.handler
+      if (handler)
+        handler(attr,value,meta)
       else
-         "<strong>" + value + "</strong>"
+        "<strong>" + value + "</strong>"
 
   )
+
 )

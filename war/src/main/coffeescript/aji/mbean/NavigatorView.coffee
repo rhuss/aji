@@ -48,7 +48,7 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
         $domain.append($("<a href='#' class='navigator domain-name'></a>").text(domain))
         $mbeans = $("<ul class='nav nav-pills nav-stacked navigator mbean-list'></ul>").appendTo($domain)
         for mbean in _.keys(mbeans).sort()
-          $mbean = $("<li class='navigator mbean'></li>").append($("<a href='#'></a>").text(mbean)).appendTo($mbeans)
+          $mbean = $("<li class='navigator mbean'></li>").append($("<a href='#'></a>").text(mbean.replace(/,/g,", "))).appendTo($mbeans)
           objectname = domain + ":" + mbean
           $mbean.data(
             domain: domain
