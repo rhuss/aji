@@ -13,32 +13,53 @@
   ~  See the License for the specific language governing permissions and
   ~  limitations under the License.
   -->
-<table class="table table-striped">
-  <thead>
+<script id="attributes" type="text/handlebar">
+  <table class="table table-striped">
+    <thead>
     <tr>
       <th>Name</th>
       <th>Type</th>
       <th>Value</th>
       <th>Description</th>
-      <th>R/W</th>
     </tr>
-  </thead>
-  <tbody>
-  {{#each data}}
-  <tr>
-    <td>
-      {{this.name}}
-    </td>
-    <td>
-      {{this.type}}
-    </td>
-    <td>
-      <strong>{{this.value}}</strong>
-    </td>
-    <td>{{this.desc}}</td>
-    <td>{{this.rw}}</td>
-  </tr>
-  {{/each}}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+    {{#each data}}
+    <tr>
+      <td>
+        {{this.name}}
+      </td>
+      <td>
+        {{this.type}}
+      </td>
+      <td>
+        {{this.value}}
+      </td>
+      <td>{{this.desc}}</td>
+    </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</script>
+
+<script id="compositeData" type="text/handlebar">
+  <table class="table">
+    <tbody>
+    {{#each data}}
+    <tr>
+      <td>
+        {{this.key}}
+      </td>
+      <td>
+        {{this.value}}
+      </td>
+    </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</script>
+
+<script id="plainValue" type="text/handlebar">
+   <strong>{{value}}</strong>
+</script>
 

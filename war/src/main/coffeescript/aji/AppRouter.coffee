@@ -27,7 +27,7 @@ define(["backbone","aji/HeaderView","aji/mbean/MBeanBrowserView"],(Backbone,Head
       navigator: () ->
         if (!@mbeanBrowserView)
           @mbeanBrowserView = new MBeanBrowserView()
-        $('#content').html(@mbeanBrowserView.render().el)
+        $('#content').replaceWith(@mbeanBrowserView.render().el).attr("id","#content")
   )
 
   AppRouter

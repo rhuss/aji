@@ -16,11 +16,25 @@
 
 
 ###
- The current implementation uses underscore template, but can be switched later
+ The current implementation uses handelbars template, but can be switched later
  on to something more sophisticated
 ###
 define(["jquery","handlebars"], ($,Handlebars) ->
-    tpl =
+  Handlebars.registerHelper('eachProp', (context, options) ->
+    ret = ""
+    for prop,value of context
+      ret = ret + options.fn(
+          prop:   prop
+          value:  value
+      )
+    ret
+  )
+
+  Handlebars.registerHelper('jsonify', (context,options) ->
+    JSON.stringify(options.fn(context))
+  )
+
+  {
       # Hash of preloaded templates for the app
       templates:{}
 
@@ -32,7 +46,14 @@ define(["jquery","handlebars"], ($,Handlebars) ->
             name = names[index]
             console.log('Loading template: ' + name)
             $.get('tmpl/' + name + '.html', (data) =>
-                @templates[name] = Handlebars.compile(data)
+                $sub = $(data).filter("script[type=text/handlebar]")
+                if (!$sub.size())
+                   @templates[name] = Handlebars.compile(data)
+                else
+                   tmpl = @templates
+                   $sub.each((el) ->
+                     tmpl[this.id] = Handlebars.compile($(this).html())
+                   )
                 index++
                 if (index < names.length)
                   loadTemplate(index)
@@ -43,20 +64,5 @@ define(["jquery","handlebars"], ($,Handlebars) ->
 
       # Get template by name from hash of preloaded templates
       template: (name,context) -> @templates[name](context)
-
-    Handlebars.registerHelper('eachProp', (context, options) ->
-      ret = ""
-      for prop,value of context
-        ret = ret + options.fn(
-            prop:   prop
-            value:  value
-        )
-      ret
-    )
-
-    Handlebars.registerHelper('jsonify', (context,options) ->
-      JSON.stringify(options.fn(context))
-    )
-
-    tpl
+  }
 )

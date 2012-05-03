@@ -26,8 +26,10 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
       # Create the filter box
       @$filterEl = $(@make("input",
         type: "text"
-        class: "filter"
+        class: "search-query filter"
+        placeholder: "Filter"
       )).appendTo(@$el)
+
       @$ul = $("<ul class='nav nav-pills nav-stacked navigator domain-list'></ul>").appendTo(@$el)
       @$ul.delegate("li.navigator","click",@clickHandler)
 
@@ -43,7 +45,7 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
         )
         @domain2ElementMap[domain] = $domain
         $domain.append($("<a href='#' class='navigator domain-name'></a>").text(domain))
-        $mbeans = $("<ul class='navigator mbean-list'></ul>").appendTo($domain)
+        $mbeans = $("<ul class='nav nav-pills nav-stacked navigator mbean-list'></ul>").appendTo($domain)
         for mbean in _.keys(mbeans).sort()
           $mbean = $("<li class='navigator mbean'></li>").append($("<a href='#'></a>").text(mbean)).appendTo($mbeans)
           objectname = domain + ":" + mbean

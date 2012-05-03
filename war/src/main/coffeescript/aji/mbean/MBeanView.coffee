@@ -2,10 +2,16 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
   MBeanView = Backbone.View.extend(
 
     attributes:
-      class: "9span"
+      class: "span9"
 
     initialize: ->
       mediator.subscribe("navigator-mbean-select",(mbean) => @render(mbean))
+
+    typeShortenMap:
+      'java.lang.String': 'String'
+      'javax.management.openmbean.CompositeData': 'CompositeData'
+
+    arrayRegexp: /^\s*\[L(.*);\s*$/
 
     render: (mbean) ->
       # add up a map
@@ -15,18 +21,43 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
       console.dir(attributes)
       data = for attr,meta of attributes
         { name: attr
-        desc: meta.desc
-        value: attributeValues[attr]
-        type: meta.type
+        desc: @cleanupDescription(attr,meta)
+        value:@prepareValue(attributeValues[attr],meta)
+        type: @shortenType(meta.type)
         rw: meta.rw }
-      console.dir(data)
 
-      html = TemplateManager.template("mbean",
+      html = TemplateManager.template("attributes",
         data: data
         info: info
         attributes: attributes
       )
       @$el.html(html)
       #@$el.text("Info: " + JSON.stringify(info))
+
+    shortenType: (type) ->
+      arrayMatch = @arrayRegexp.exec(type);
+      isArray = false
+      if (arrayMatch)
+        type = arrayMatch[1]
+        isArray = true
+      type = @typeShortenMap[type] if @typeShortenMap[type]
+      type += "[]" if isArray
+      type
+
+    cleanupDescription: (name,meta) ->
+      return if meta.desc == name then "" else meta.desc
+
+    prepareValue: (value,meta) ->
+      if (meta.type == 'javax.management.openmbean.CompositeData')
+         TemplateManager.template("compositeData",
+            data:  for key,val of value
+              {
+                key: key
+                value: val
+              }
+         )
+      else
+         "<strong>" + value + "</strong>"
+
   )
 )
