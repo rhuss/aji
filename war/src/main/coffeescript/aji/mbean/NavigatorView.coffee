@@ -15,9 +15,10 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
     events:
       "keypress": "keyPress"
       "keydown": "keyDown"
+      "keyup": "keyUp"
 
     # Textfield used for filter
-    $filter: null
+    $filterEl: null
 
     # Outer list
     $ul: null
@@ -68,20 +69,41 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
       ev.stopPropagation()
       console.log("KC: " + ev.keyCode)
       switch ev.keyCode
-        when 38 then @upInList()
+        when 38
+          @upInList()
+          ev.preventDefault()
         when 40 then @downInList()
         when 13 then @selectInList(ev)
-        else (ev) => @filterInput(ev)
 
     keyDown: (ev) ->
       if ( ($.browser.webkit || $.browser.msie) && ev.keyCode != 13)
         @keyPress(ev)
+
+    keyUp: (ev) ->
+      filter = ev.target.value
+      if (filter != @filterText)
+        @filterText = filter
+        @$ul.find('.active').removeClass('active')
+        if (!filter.length)
+          @$ul.find('li').show().find('ul').hide()
+          return
+        filterRegexp = new RegExp(filter,"i");
+        @$ul.find('li').each( ->
+          val = $(this).text()
+          console.log(val);
+          if filterRegexp.exec(val)
+            $(this).parent().show()
+            $(this).show()
+          else
+            $(this).hide()
+        )
 
     downInList: () ->
       $active = @$ul.find('.active').removeClass('active')
       $next = $active.find('li:visible').first()
       if (!$next.length)
         $next = $active.next()
+        $next = $next.next() while $next != null && $next.is(":hidden")
         if (!$next.length)
           $next = $active.parents('li:visible').first()
           if ($next.length)
@@ -97,6 +119,7 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
       $prev = $active.prev().find('li:visible').last()
       if (!$prev.length)
         $prev = $active.prev()
+        $prev = $prev.prev() while $prev != null && $prev.is(":hidden")
         if (!$prev.length)
           $prev = $active.parents('li:visible').first()
           if (!$prev.length)
@@ -106,6 +129,7 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
     selectInList: (ev) ->
       $active = @$ul.find('.active')
       selectMBeanOrDomain($active)
+
   )
 
 
@@ -124,7 +148,7 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
 
   selectMBeanOrDomain = ($el) ->
     if ($el.data("mbean"))
-      console.log("MBean: " + $el.data("mbean"))
+      console.log("MBean: " +  $el.data("mbean"))
       mediator.publish("navigator-mbean-select",$el.data("mbean"))
     else if ($el.data("domain"))
       $el.find("ul").toggle('fast')
