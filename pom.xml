@@ -198,7 +198,7 @@
   </dependencyManagement>
 
   <properties>
-    <jolokia.version>1.0.2</jolokia.version>
+    <jolokia.version>1.0.5-SNAPSHOT</jolokia.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.host.url>http://labs.consol.de/sonar</sonar.host.url>
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>

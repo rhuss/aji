@@ -30,7 +30,7 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
          name: 'CompositeData'
          handler: compositeDataHandler
       'javax.management.openmbean.TabularData':
-         name: 'TabularData' 
+         name: 'TabularData'
          handler: compositeDataHandler
 
     arrayRegexp: /^\s*\[L(.*);\s*$/

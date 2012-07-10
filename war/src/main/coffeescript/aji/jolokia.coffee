@@ -1,5 +1,5 @@
 ###
- Copyright 2009-2011 Roland Huss
+ Copyright 2009-2012 Roland Huss
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -40,89 +40,41 @@ define(["jolokia-simple","underscore"], (Jolokia,_) ->
     # Interval between two refreshes, in seconds
     pollPeriod : 5 * 60
 
-    # Id of timer
-    timerId : null
-
-    # State of this client: "paused", "running"
-    state : "paused"
-
     # Constructor requiring as single argument the jolokia
     # client.
     constructor: (url) -> @j4p = new Jolokia(url)
 
     # Register a request which gets polled periodically
-    registerRequest : (callback, request...) ->
+    register : (callback, request...) ->
       throw  "At a least one request must be provided" if arguments.length < 2
-      if (typeof callback is 'object')
-        success_cb = callback.success
-        error_cb = callback.error
-      else if (typeof callback is 'function')
-        success_cb = callback
-        error_cb = null
-      else
-        throw "First argument must be either a callback func " +
-              "or an object with 'success' and 'error' attrs"
-
-      handle = @requests.length
-      @requests[handle] =
-        success : success_cb
-        error : error_cb
-        requests : arguments[1..]
-      handle
+      @j4p.register.apply(callback,arguments[1..])
 
     # Unregister a request
-    unregisterRequest: (handle) -> @requests[handle] = null
+    unregister : (handle) ->
+      @j4p.unregister(handle)
 
-    # Nuke all empty requests
-    compressRequests: -> @requests = _.filter(@requests, (req) -> req != null)
+    # Poller lifecycle methods
+    start : (pollInterval) ->
+      @j4p.start(pollInterval or @pollPeriod)
 
-    callJolokia: ->
-      success_cbs = []
-      error_cbs = []
-      requests = []
-      for job in @requests
-        for req in job?.requests
-          requests.push(req)
-          success_cbs.push(job.success)
-          error_cbs.push(job.error)
+    stop : ->
+      @j4p.stop()
 
-      opts =
-        success: (resp, i) -> success_cbs[i].apply(this, resp)
-        error: (resp, i) -> error_cbs[i].apply(this, resp) if error_cbs[i] != null
+    isRunning : ->
+      @j4p.isRunning()
 
-      @j4p.request(requests, opts)
-
-    # Start poller
-    start: (pollInterval) ->
-      interval = pollInterval or @pollPeriod
-      if (@running())
-        return if interval is @pollPeriod
-        @stop()
-
-      @timerId = setInterval(@callJolokia, @pollPeriod)
-      @state = "running"
-
-    # Stop poller;
-    stop: ->
-      return if not @running()
-      clearInterval(@timerId)
-      @timerId = null
-      @state = "stopped"
-
-    running: -> @state is "running"
-
-    mBeans: (force) ->
+    mBeans : (force) ->
       @mbeanCache = @j4p.list(null, {maxDepth : 2}) if !@mbeanCache or force
       @mbeanCache
 
-    mBeanNames: (force) ->
+    mBeanNames : (force) ->
       names = []
       for domain, value of @mBeans(force)
         for props of value
           names.push(domain + ":" + props)
       names.sort()
 
-    filterNames: (term, force) ->
+    filterNames : (term, force) ->
       regexp = new RegExp(term, "i")
       _.filter(@mBeanNames(force), (elem) -> regexp.test(elem))
 

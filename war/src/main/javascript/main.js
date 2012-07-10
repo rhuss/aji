@@ -33,7 +33,7 @@ curl({
  function(Backbone,TemplateManager,AppRouter) {
      TemplateManager.loadTemplates(['header','mbean'],
              function () {
-                 app = new AppRouter();
+                 var app = new AppRouter();
                  Backbone.history.start();
              });
 

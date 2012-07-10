@@ -52,7 +52,7 @@ define(["jquery","jolokia/jolokia-simple"], function ($,Jolokia) {
             // State of this client: "paused", "running"
             this.state = "paused";
 
-            this.registerRequest = function (callback, request) {
+            this.register = function (callback, request) {
                 if (arguments.length < 2) {
                     throw "At a least a request must be provided";
                 }
@@ -76,7 +76,7 @@ define(["jquery","jolokia/jolokia-simple"], function ($,Jolokia) {
                 return handle;
             };
 
-            this.unregisterRequest = function (handle) {
+            this.unregister = function (handle) {
                 this.requests[handle] = null;
             };
 

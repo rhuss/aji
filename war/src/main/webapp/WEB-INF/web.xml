@@ -5,7 +5,7 @@
 
   <display-name>JSON JMX Agent</display-name>
 
-  <!-- A dispatch filter for proper deliverying JS script files -->
+  <!-- A dispatch filter for proper delivering JS script files -->
   <filter>
     <filter-name>dispatch-filter</filter-name>
     <filter-class>org.jolokia.aji.DispatchFilter</filter-class>
