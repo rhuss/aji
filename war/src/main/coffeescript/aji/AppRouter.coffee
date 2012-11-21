@@ -17,8 +17,8 @@
 define(["backbone","aji/HeaderView","aji/mbean/MBeanBrowserView"],(Backbone,HeaderView,MBeanBrowserView) ->
   AppRouter = Backbone.Router.extend(
       routes:
-        "":"navigator"
-        "mbeans":"navigator"
+        "": "navigator"
+        "mbeans": "navigator"
 
       initialize: () ->
         @headerView = new HeaderView();

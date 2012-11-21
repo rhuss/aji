@@ -1,0 +1,23 @@
+
+
+/* =====================================================================
+ * Aji Specific Styles
+ */
+
+body {
+    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+
+.navigator .mbean {
+    padding-left: 20px;
+}
+
+.table td > .composite-data {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+table.table .composite-data {
+
+    margin-bottom: 0;
+}

@@ -40,6 +40,9 @@ define(["jolokia-simple","underscore"], (Jolokia,_) ->
     # Interval between two refreshes, in seconds
     pollPeriod : 5 * 60
 
+    # Jolokia client
+    j4p: null
+
     # Constructor requiring as single argument the jolokia
     # client.
     constructor: (url) -> @j4p = new Jolokia(url)

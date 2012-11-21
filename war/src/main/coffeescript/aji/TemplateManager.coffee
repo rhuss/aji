@@ -46,7 +46,7 @@ define(["jquery","handlebars"], ($,Handlebars) ->
             name = names[index]
             console.log('Loading template: ' + name)
             $.get('tmpl/' + name + '.html', (data) =>
-                $sub = $(data).filter("script[type=text/handlebar]")
+                $sub = $(data).filter("script[type='text/handlebar']")
                 if (!$sub.size())
                    @templates[name] = Handlebars.compile(data)
                 else

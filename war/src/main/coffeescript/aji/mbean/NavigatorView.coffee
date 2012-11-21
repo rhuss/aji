@@ -13,15 +13,21 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
       class: "span3"
 
     events:
-      "keypress": "keyPress"
-      "keydown": "keyDown"
-      "keyup": "keyUp"
+      keypress: "keyPress"
+      keydown: "keyDown"
+      keyup: "keyUp"
 
     # Textfield used for filter
     $filterEl: null
 
     # Outer list
     $ul: null
+
+    domain2ElementMap: {}
+
+    mbean2ElementMap: {}
+
+    filter: ""
 
     initialize: () ->
       # Create the filter box
@@ -36,8 +42,6 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
 
     render: (opts) ->
       mBeanMap = jolokia.mBeans()
-      @domain2ElementMap = {}
-      @mbean2ElementMap = {}
       @$ul.empty()
       for domain,mbeans of mBeanMap
         $domain = $("<li class='navigator domain'></li>").appendTo(@$ul)
@@ -45,7 +49,8 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
           domain: domain
         )
         @domain2ElementMap[domain] = $domain
-        $domain.append($("<a href='#' class='navigator domain-name'></a>").text(domain))
+        $domainMenu = $("<a href='#' class='navigator domain-name'><i class='icon-arrow-right'></i>" + domain + "</a>");
+        $domain.append($domainMenu)
         $mbeans = $("<ul class='nav nav-pills nav-stacked navigator mbean-list'></ul>").appendTo($domain)
         for mbean in _.keys(mbeans).sort()
           $mbean = $("<li class='navigator mbean'></li>").append($("<a href='#'></a>").text(mbean.replace(/,/g,", "))).appendTo($mbeans)
@@ -107,7 +112,7 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
         if (!$next.length)
           $next = $active.parents('li:visible').first()
           if ($next.length)
-            $next = $next.next()
+            $next = $next.nextAll('li:visible').first()
           if (!$next.length)
             $next = $(@$ul.find('li:visible')[0])
       $next.addClass("active")
@@ -119,7 +124,11 @@ define(["backbone","underscore","jquery","aji/mediator","aji/jolokia","aji/Templ
       $prev = $active.prev().find('li:visible').last()
       if (!$prev.length)
         $prev = $active.prev()
+        # Lookup previous elements until one none hidden is foundl
         $prev = $prev.prev() while $prev != null && $prev.is(":hidden")
+        $visibleChilds = $prev.find("li:visible")
+        if ($visibleChilds.length)
+          $prev = $visibleChilds.last()
         if (!$prev.length)
           $prev = $active.parents('li:visible').first()
           if (!$prev.length)
