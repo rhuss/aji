@@ -68,7 +68,7 @@ and others can be defined by the user. The user can arrange the
 widgets freely on the dashboard and the configuration is saved locally
 in the browser
 
-![Ají Dashboard](http://labs.consol.de/wp-content/uploads/2012/03/dashboard1.png)
+![Ají Dashboard](https://jolokia.jira.com/secure/attachment/10114/dashboard1.png)
 
 See [AJI-3](https://jolokia.jira.com/browse/AJI-3) for details. 
 
